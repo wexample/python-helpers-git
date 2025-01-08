@@ -1,4 +1,4 @@
-python-git
+gitpython
 pip-tools
 pydantic
 pytest

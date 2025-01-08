@@ -17,7 +17,9 @@ classifiers = [
     "Operating System :: OS Independent",
 ]
 
-dependencies = []
+dependencies = [
+    "gitpython"
+]
 
 [project.urls]
 homepage = "https://github.com/wexample/python-helpers-git"

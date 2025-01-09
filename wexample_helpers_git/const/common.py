@@ -1,0 +1,2 @@
+GIT_PROVIDER_GITLAB = "gitlab"
+GIT_PROVIDER_GITHUB = "github"

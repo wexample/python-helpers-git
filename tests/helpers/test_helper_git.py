@@ -1,4 +1,3 @@
-import os
 import pytest
 from git import Repo
 from pathlib import Path

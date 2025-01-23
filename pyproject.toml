@@ -20,6 +20,9 @@ classifiers = [
 ]
 dependencies = [
     "gitpython",
+    "pip-tools",
+    "pydantic",
+    "pytest",
 ]
 
 [project.readme]

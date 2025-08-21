@@ -1,12 +1,10 @@
-import pytest
-from git import Repo
 from pathlib import Path
 from typing import Generator
 
-from wexample_helpers_git.helpers.git import (
-    git_is_init,
-    git_remote_create_once,
-)
+import pytest
+from git import Repo
+from wexample_helpers_git.helpers.git import (git_is_init,
+                                              git_remote_create_once)
 
 
 @pytest.fixture

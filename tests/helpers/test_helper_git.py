@@ -3,8 +3,7 @@ from typing import Generator
 
 import pytest
 from git import Repo
-from wexample_helpers_git.helpers.git import (git_is_init,
-                                              git_remote_create_once)
+from wexample_helpers_git.helpers.git import git_is_init, git_remote_create_once
 
 
 @pytest.fixture

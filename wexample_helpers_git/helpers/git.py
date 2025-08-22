@@ -1,4 +1,3 @@
-from typing import Optional
 
 from git import InvalidGitRepositoryError, Remote, Repo
 from wexample_helpers.const.types import FileStringOrPath

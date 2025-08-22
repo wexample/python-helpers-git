@@ -9,13 +9,13 @@ from wexample_helpers_git.helpers.git import git_is_init, git_remote_create_once
 
 
 @pytest.fixture
-def temp_dir(tmp_path: Path) -> Generator[Path, None, None]:
+def temp_dir(tmp_path: Path) -> Generator[Path]:
     """Fixture providing a temporary directory."""
     yield tmp_path
 
 
 @pytest.fixture
-def git_repo(temp_dir: Path) -> Generator[Repo, None, None]:
+def git_repo(temp_dir: Path) -> Generator[Repo]:
     """Fixture providing an initialized git repository."""
     repo = Repo.init(temp_dir)
     yield repo

@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from git import InvalidGitRepositoryError, Remote, Repo
 from wexample_helpers.const.types import FileStringOrPath
 from wexample_helpers.helpers.file import file_resolve_path

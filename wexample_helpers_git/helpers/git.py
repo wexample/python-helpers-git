@@ -18,7 +18,7 @@ def git_is_init(path: FileStringOrPath) -> bool:
         return False
 
 
-def git_remote_create_once(repo: Repo, name: str, url: str) -> Optional[Remote]:
+def git_remote_create_once(repo: Repo, name: str, url: str) -> Remote | None:
     try:
         repo.remote(name=name)
         return None

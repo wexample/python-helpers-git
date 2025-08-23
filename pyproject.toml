@@ -22,7 +22,6 @@ dependencies = [
     "gitpython",
     "pip-tools",
     "pydantic",
-    "pytest",
 ]
 
 [project.readme]
@@ -34,3 +33,6 @@ text = "MIT"
 
 [project.urls]
 homepage = "https://github.com/wexample/python-helpers-git"
+
+[project.optional-dependencies]
+dev = ["pytest"]

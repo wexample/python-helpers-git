@@ -1,19 +1,18 @@
-# Helpers Git
+# wexample-helpers-git
 
 Some python basic helpers for git.
 
-Version: 0.0.31
+Version: 0.0.45
 
 ## Requirements
 
-- Python >=3.6
+- Python >=3.10
 
 ## Dependencies
 
 - gitpython
-- pip-tools
-- pydantic
-- pytest
+- pydantic>=2,<3
+- wexample-helpers==0.0.64
 
 ## Installation
 

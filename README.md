@@ -12,7 +12,7 @@ Version: 0.0.46
 
 - gitpython
 - pydantic>=2,<3
-- wexample-helpers==0.0.64
+- wexample-helpers==0.0.65
 
 ## Installation
 

@@ -186,7 +186,10 @@ def git_ensure_upstream(
         try:
             # Try to set upstream to an existing remote branch.
             git_set_upstream(
-                branch, cwd=cwd_resolved, remote=default_remote, inherit_stdio=inherit_stdio
+                branch,
+                cwd=cwd_resolved,
+                remote=default_remote,
+                inherit_stdio=inherit_stdio,
             )
             upstream = f"{default_remote}/{branch}"
         except Exception:

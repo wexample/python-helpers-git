@@ -85,6 +85,51 @@ def git_has_working_changes(*, cwd: FileStringOrPath, inherit_stdio: bool = True
     return out == "CHANGED"
 
 
+# Branch switching/creation helpers
+def git_switch_new_branch(branch: str, *, cwd: FileStringOrPath, inherit_stdio: bool = True) -> None:
+    """Create and switch to a new branch using `git switch -c <branch>`."""
+    shell_run(
+        ["git", "switch", "-c", branch],
+        inherit_stdio=inherit_stdio,
+        cwd=file_resolve_path(cwd),
+    )
+
+
+def git_checkout_new_branch(branch: str, *, cwd: FileStringOrPath, inherit_stdio: bool = True) -> None:
+    """Create and switch to a new branch using `git checkout -b <branch>` (compat)."""
+    shell_run(
+        ["git", "checkout", "-b", branch],
+        inherit_stdio=inherit_stdio,
+        cwd=file_resolve_path(cwd),
+    )
+
+
+def git_switch_branch(branch: str, *, cwd: FileStringOrPath, inherit_stdio: bool = True) -> None:
+    """Switch to an existing branch using `git switch <branch>`."""
+    shell_run(
+        ["git", "switch", branch],
+        inherit_stdio=inherit_stdio,
+        cwd=file_resolve_path(cwd),
+    )
+
+
+def git_create_or_switch_branch(branch: str, *, cwd: FileStringOrPath, inherit_stdio: bool = True) -> None:
+    """Try to create and switch to a branch; fallback to legacy checkout; finally switch existing.
+
+    Order:
+    - git switch -c <branch>
+    - git checkout -b <branch>
+    - git switch <branch>
+    """
+    try:
+        git_switch_new_branch(branch, cwd=cwd, inherit_stdio=inherit_stdio)
+    except Exception:
+        try:
+            git_checkout_new_branch(branch, cwd=cwd, inherit_stdio=inherit_stdio)
+        except Exception:
+            git_switch_branch(branch, cwd=cwd, inherit_stdio=inherit_stdio)
+
+
 def git_has_index_changes(*, cwd: FileStringOrPath, inherit_stdio: bool = True) -> bool:
     """Return True if there are staged (indexed) changes."""
     out = shell_run(

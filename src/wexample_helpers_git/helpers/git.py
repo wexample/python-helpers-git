@@ -162,3 +162,37 @@ def git_push_tag(tag: str, *, cwd: FileStringOrPath, remote: str = "origin", inh
         inherit_stdio=inherit_stdio,
         cwd=file_resolve_path(cwd),
     )
+
+
+def git_last_tag_for_prefix(prefix: str, *, cwd: FileStringOrPath, inherit_stdio: bool = False) -> str | None:
+    """Return the last tag (sorted -V) matching the given glob prefix, e.g. "name/v*".
+
+    Returns None if no tag matches.
+    """
+    out = shell_run(
+        [
+            "bash",
+            "-lc",
+            f"git tag --list '{prefix}' | sort -V | tail -n1",
+        ],
+        inherit_stdio=inherit_stdio,
+        cwd=file_resolve_path(cwd),
+    ).stdout.strip()
+    return out or None
+
+
+def git_has_changes_since_tag(tag: str, pathspec: str = ".", *, cwd: FileStringOrPath, inherit_stdio: bool = False) -> bool:
+    """Return True if there are changes in pathspec since the given tag.
+
+    Runs: git diff --quiet <tag> -- <pathspec> || echo CHANGED
+    """
+    out = shell_run(
+        [
+            "bash",
+            "-lc",
+            f"git diff --quiet {tag} -- '{pathspec}' || echo CHANGED",
+        ],
+        inherit_stdio=inherit_stdio,
+        cwd=file_resolve_path(cwd),
+    ).stdout.strip()
+    return out == "CHANGED"

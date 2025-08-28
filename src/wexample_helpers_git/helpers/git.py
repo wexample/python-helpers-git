@@ -131,3 +131,34 @@ def git_ensure_upstream(
         )
         upstream = f"{default_remote}/{branch}"
     return upstream
+
+
+def git_tag_exists(tag: str, *, cwd: FileStringOrPath, inherit_stdio: bool = False) -> bool:
+    """Return True if a tag with the given name exists locally."""
+    try:
+        out = shell_run(
+            ["git", "rev-parse", "-q", "--verify", f"refs/tags/{tag}"],
+            inherit_stdio=inherit_stdio,
+            cwd=file_resolve_path(cwd),
+        ).stdout.strip()
+        return len(out) > 0
+    except Exception:
+        return False
+
+
+def git_tag_annotated(tag: str, message: str, *, cwd: FileStringOrPath, inherit_stdio: bool = True) -> None:
+    """Create an annotated tag. Raises if the tag already exists."""
+    shell_run(
+        ["git", "tag", "-a", tag, "-m", message],
+        inherit_stdio=inherit_stdio,
+        cwd=file_resolve_path(cwd),
+    )
+
+
+def git_push_tag(tag: str, *, cwd: FileStringOrPath, remote: str = "origin", inherit_stdio: bool = True) -> None:
+    """Push a specific tag to the remote."""
+    shell_run(
+        ["git", "push", remote, tag],
+        inherit_stdio=inherit_stdio,
+        cwd=file_resolve_path(cwd),
+    )

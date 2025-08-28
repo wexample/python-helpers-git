@@ -49,11 +49,11 @@ def git_get_upstream(*, cwd: FileStringOrPath, inherit_stdio: bool = False) -> s
 
 
 def git_set_upstream(
-        branch: str,
-        *,
-        cwd: FileStringOrPath,
-        remote: str = "origin",
-        inherit_stdio: bool = True,
+    branch: str,
+    *,
+    cwd: FileStringOrPath,
+    remote: str = "origin",
+    inherit_stdio: bool = True,
 ) -> None:
     """Set the upstream of the current branch to remote/branch."""
     shell_run(
@@ -64,7 +64,7 @@ def git_set_upstream(
 
 
 def git_pull_rebase_autostash(
-        *, cwd: FileStringOrPath, inherit_stdio: bool = True
+    *, cwd: FileStringOrPath, inherit_stdio: bool = True
 ) -> None:
     """Pull latest changes with rebase and autostash to preserve local modifications."""
     shell_run(
@@ -74,7 +74,9 @@ def git_pull_rebase_autostash(
     )
 
 
-def git_has_working_changes(*, cwd: FileStringOrPath, inherit_stdio: bool = True) -> bool:
+def git_has_working_changes(
+    *, cwd: FileStringOrPath, inherit_stdio: bool = True
+) -> bool:
     """Return True if there are unstaged changes in tracked files."""
     out = shell_run(
         ["bash", "-lc", "git diff --quiet || echo CHANGED"],
@@ -85,7 +87,9 @@ def git_has_working_changes(*, cwd: FileStringOrPath, inherit_stdio: bool = True
 
 
 # Branch switching/creation helpers
-def git_switch_new_branch(branch: str, *, cwd: FileStringOrPath, inherit_stdio: bool = True) -> None:
+def git_switch_new_branch(
+    branch: str, *, cwd: FileStringOrPath, inherit_stdio: bool = True
+) -> None:
     """Create and switch to a new branch using `git switch -c <branch>`."""
     shell_run(
         ["git", "switch", "-c", branch],
@@ -94,7 +98,9 @@ def git_switch_new_branch(branch: str, *, cwd: FileStringOrPath, inherit_stdio: 
     )
 
 
-def git_checkout_new_branch(branch: str, *, cwd: FileStringOrPath, inherit_stdio: bool = True) -> None:
+def git_checkout_new_branch(
+    branch: str, *, cwd: FileStringOrPath, inherit_stdio: bool = True
+) -> None:
     """Create and switch to a new branch using `git checkout -b <branch>` (compat)."""
     shell_run(
         ["git", "checkout", "-b", branch],
@@ -103,7 +109,9 @@ def git_checkout_new_branch(branch: str, *, cwd: FileStringOrPath, inherit_stdio
     )
 
 
-def git_switch_branch(branch: str, *, cwd: FileStringOrPath, inherit_stdio: bool = True) -> None:
+def git_switch_branch(
+    branch: str, *, cwd: FileStringOrPath, inherit_stdio: bool = True
+) -> None:
     """Switch to an existing branch using `git switch <branch>`."""
     shell_run(
         ["git", "switch", branch],
@@ -112,7 +120,9 @@ def git_switch_branch(branch: str, *, cwd: FileStringOrPath, inherit_stdio: bool
     )
 
 
-def git_create_or_switch_branch(branch: str, *, cwd: FileStringOrPath, inherit_stdio: bool = True) -> None:
+def git_create_or_switch_branch(
+    branch: str, *, cwd: FileStringOrPath, inherit_stdio: bool = True
+) -> None:
     """Try to create and switch to a branch; fallback to legacy checkout; finally switch existing.
 
     Order:
@@ -140,7 +150,7 @@ def git_has_index_changes(*, cwd: FileStringOrPath, inherit_stdio: bool = True) 
 
 
 def git_commit_all_with_message(
-        message: str, *, cwd: FileStringOrPath, inherit_stdio: bool = True
+    message: str, *, cwd: FileStringOrPath, inherit_stdio: bool = True
 ) -> None:
     """Commit all tracked changes with the provided message if any are present (callers should check)."""
     shell_run(
@@ -160,7 +170,7 @@ def git_push_follow_tags(*, cwd: FileStringOrPath, inherit_stdio: bool = True) -
 
 
 def git_ensure_upstream(
-        *, cwd: FileStringOrPath, default_remote: str = "origin", inherit_stdio: bool = True
+    *, cwd: FileStringOrPath, default_remote: str = "origin", inherit_stdio: bool = True
 ) -> str:
     """Ensure current branch has an upstream. If missing, set to <default_remote>/<branch> and return it.
 
@@ -177,7 +187,9 @@ def git_ensure_upstream(
     return upstream
 
 
-def git_tag_exists(tag: str, *, cwd: FileStringOrPath, inherit_stdio: bool = False) -> bool:
+def git_tag_exists(
+    tag: str, *, cwd: FileStringOrPath, inherit_stdio: bool = False
+) -> bool:
     """Return True if a tag with the given name exists locally."""
     try:
         out = shell_run(
@@ -190,7 +202,9 @@ def git_tag_exists(tag: str, *, cwd: FileStringOrPath, inherit_stdio: bool = Fal
         return False
 
 
-def git_tag_annotated(tag: str, message: str, *, cwd: FileStringOrPath, inherit_stdio: bool = True) -> None:
+def git_tag_annotated(
+    tag: str, message: str, *, cwd: FileStringOrPath, inherit_stdio: bool = True
+) -> None:
     """Create an annotated tag. Raises if the tag already exists."""
     shell_run(
         ["git", "tag", "-a", tag, "-m", message],
@@ -199,7 +213,13 @@ def git_tag_annotated(tag: str, message: str, *, cwd: FileStringOrPath, inherit_
     )
 
 
-def git_push_tag(tag: str, *, cwd: FileStringOrPath, remote: str = "origin", inherit_stdio: bool = True) -> None:
+def git_push_tag(
+    tag: str,
+    *,
+    cwd: FileStringOrPath,
+    remote: str = "origin",
+    inherit_stdio: bool = True,
+) -> None:
     """Push a specific tag to the remote."""
     shell_run(
         ["git", "push", remote, tag],
@@ -208,7 +228,9 @@ def git_push_tag(tag: str, *, cwd: FileStringOrPath, remote: str = "origin", inh
     )
 
 
-def git_last_tag_for_prefix(prefix: str, *, cwd: FileStringOrPath, inherit_stdio: bool = False) -> str | None:
+def git_last_tag_for_prefix(
+    prefix: str, *, cwd: FileStringOrPath, inherit_stdio: bool = False
+) -> str | None:
     """Return the last tag (sorted -V) matching the given glob prefix, e.g. "name/v*".
 
     Returns None if no tag matches.
@@ -225,7 +247,9 @@ def git_last_tag_for_prefix(prefix: str, *, cwd: FileStringOrPath, inherit_stdio
     return out or None
 
 
-def git_has_changes_since_tag(tag: str, pathspec: str = ".", *, cwd: FileStringOrPath, inherit_stdio: bool = False) -> bool:
+def git_has_changes_since_tag(
+    tag: str, pathspec: str = ".", *, cwd: FileStringOrPath, inherit_stdio: bool = False
+) -> bool:
     """Return True if there are changes in pathspec since the given tag.
 
     Runs: git diff --quiet <tag> -- <pathspec> || echo CHANGED

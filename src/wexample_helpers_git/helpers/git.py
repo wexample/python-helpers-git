@@ -183,10 +183,20 @@ def git_ensure_upstream(
     branch = git_current_branch(cwd=cwd_resolved, inherit_stdio=False)
     upstream = git_get_upstream(cwd=cwd_resolved, inherit_stdio=False)
     if not upstream:
-        git_set_upstream(
-            branch, cwd=cwd_resolved, remote=default_remote, inherit_stdio=inherit_stdio
-        )
-        upstream = f"{default_remote}/{branch}"
+        try:
+            # Try to set upstream to an existing remote branch.
+            git_set_upstream(
+                branch, cwd=cwd_resolved, remote=default_remote, inherit_stdio=inherit_stdio
+            )
+            upstream = f"{default_remote}/{branch}"
+        except Exception:
+            # Remote branch likely does not exist yet; create it and set upstream in one go.
+            shell_run(
+                ["git", "push", "-u", default_remote, branch],
+                inherit_stdio=inherit_stdio,
+                cwd=cwd_resolved,
+            )
+            upstream = f"{default_remote}/{branch}"
     return upstream
 
 

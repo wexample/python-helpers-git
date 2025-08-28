@@ -31,7 +31,7 @@ def git_current_branch(*, cwd: FileStringOrPath, inherit_stdio: bool = False) ->
     """Return the current branch name."""
     return shell_run(
         ["git", "rev-parse", "--abbrev-ref", "HEAD"],
-        inherit_stdio=inherit_stdio,
+        inherit_stdio=False,
         cwd=file_resolve_path(cwd),
     ).stdout.strip()
 
@@ -41,7 +41,7 @@ def git_get_upstream(*, cwd: FileStringOrPath, inherit_stdio: bool = False) -> s
     try:
         return shell_run(
             ["git", "rev-parse", "--abbrev-ref", "--symbolic-full-name", "@{u}"],
-            inherit_stdio=inherit_stdio,
+            inherit_stdio=False,
             cwd=file_resolve_path(cwd),
         ).stdout.strip()
     except Exception:
@@ -78,9 +78,11 @@ def git_has_working_changes(
     *, cwd: FileStringOrPath, inherit_stdio: bool = True
 ) -> bool:
     """Return True if there are unstaged changes in tracked files."""
+    # Always capture output here regardless of inherit_stdio so we can safely read stdout.
+    # When inherit_stdio=True, stdout would be None and .strip() would fail.
     out = shell_run(
         ["bash", "-lc", "git diff --quiet || echo CHANGED"],
-        inherit_stdio=inherit_stdio,
+        inherit_stdio=False,
         cwd=file_resolve_path(cwd),
     ).stdout.strip()
     return out == "CHANGED"
@@ -141,9 +143,10 @@ def git_create_or_switch_branch(
 
 def git_has_index_changes(*, cwd: FileStringOrPath, inherit_stdio: bool = True) -> bool:
     """Return True if there are staged (indexed) changes."""
+    # Always capture output here regardless of inherit_stdio so we can safely read stdout.
     out = shell_run(
         ["bash", "-lc", "git diff --cached --quiet || echo CHANGED"],
-        inherit_stdio=inherit_stdio,
+        inherit_stdio=False,
         cwd=file_resolve_path(cwd),
     ).stdout.strip()
     return out == "CHANGED"
@@ -194,7 +197,7 @@ def git_tag_exists(
     try:
         out = shell_run(
             ["git", "rev-parse", "-q", "--verify", f"refs/tags/{tag}"],
-            inherit_stdio=inherit_stdio,
+            inherit_stdio=False,
             cwd=file_resolve_path(cwd),
         ).stdout.strip()
         return len(out) > 0
@@ -241,7 +244,7 @@ def git_last_tag_for_prefix(
             "-lc",
             f"git tag --list '{prefix}' | sort -V | tail -n1",
         ],
-        inherit_stdio=inherit_stdio,
+        inherit_stdio=False,
         cwd=file_resolve_path(cwd),
     ).stdout.strip()
     return out or None
@@ -260,7 +263,7 @@ def git_has_changes_since_tag(
             "-lc",
             f"git diff --quiet {tag} -- '{pathspec}' || echo CHANGED",
         ],
-        inherit_stdio=inherit_stdio,
+        inherit_stdio=False,
         cwd=file_resolve_path(cwd),
     ).stdout.strip()
     return out == "CHANGED"

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from git import InvalidGitRepositoryError, Remote, Repo
+
 from wexample_helpers.const.types import FileStringOrPath
 from wexample_helpers.helpers.file import file_resolve_path
 from wexample_helpers.helpers.shell import shell_run
@@ -49,11 +50,11 @@ def git_get_upstream(*, cwd: FileStringOrPath, inherit_stdio: bool = False) -> s
 
 
 def git_set_upstream(
-    branch: str,
-    *,
-    cwd: FileStringOrPath,
-    remote: str = "origin",
-    inherit_stdio: bool = True,
+        branch: str,
+        *,
+        cwd: FileStringOrPath,
+        remote: str = "origin",
+        inherit_stdio: bool = True,
 ) -> None:
     """Set the upstream of the current branch to remote/branch."""
     shell_run(
@@ -64,7 +65,7 @@ def git_set_upstream(
 
 
 def git_pull_rebase_autostash(
-    *, cwd: FileStringOrPath, inherit_stdio: bool = True
+        *, cwd: FileStringOrPath, inherit_stdio: bool = True
 ) -> None:
     """Pull latest changes with rebase and autostash to preserve local modifications."""
     shell_run(
@@ -74,28 +75,28 @@ def git_pull_rebase_autostash(
     )
 
 
-def git_has_working_changes(*, cwd: FileStringOrPath) -> bool:
+def git_has_working_changes(*, cwd: FileStringOrPath, inherit_stdio: bool = True) -> bool:
     """Return True if there are unstaged changes in tracked files."""
     out = shell_run(
         ["bash", "-lc", "git diff --quiet || echo CHANGED"],
-        inherit_stdio=False,
+        inherit_stdio=inherit_stdio,
         cwd=file_resolve_path(cwd),
     ).stdout.strip()
     return out == "CHANGED"
 
 
-def git_has_index_changes(*, cwd: FileStringOrPath) -> bool:
+def git_has_index_changes(*, cwd: FileStringOrPath, inherit_stdio: bool = True) -> bool:
     """Return True if there are staged (indexed) changes."""
     out = shell_run(
         ["bash", "-lc", "git diff --cached --quiet || echo CHANGED"],
-        inherit_stdio=False,
+        inherit_stdio=inherit_stdio,
         cwd=file_resolve_path(cwd),
     ).stdout.strip()
     return out == "CHANGED"
 
 
 def git_commit_all_with_message(
-    message: str, *, cwd: FileStringOrPath, inherit_stdio: bool = True
+        message: str, *, cwd: FileStringOrPath, inherit_stdio: bool = True
 ) -> None:
     """Commit all tracked changes with the provided message if any are present (callers should check)."""
     shell_run(
@@ -115,7 +116,7 @@ def git_push_follow_tags(*, cwd: FileStringOrPath, inherit_stdio: bool = True) -
 
 
 def git_ensure_upstream(
-    *, cwd: FileStringOrPath, default_remote: str = "origin", inherit_stdio: bool = True
+        *, cwd: FileStringOrPath, default_remote: str = "origin", inherit_stdio: bool = True
 ) -> str:
     """Ensure current branch has an upstream. If missing, set to <default_remote>/<branch> and return it.
 

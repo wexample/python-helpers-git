@@ -2,7 +2,7 @@
 
 Some python basic helpers for git.
 
-Version: 0.0.46
+Version: 0.0.48
 
 ## Requirements
 

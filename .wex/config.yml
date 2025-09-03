@@ -1,2 +1,3 @@
-name: helpers_git
-version: 0.0.49
+general:
+  name: helpers_git
+  version: 0.0.49

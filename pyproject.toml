@@ -41,7 +41,7 @@ distribution = true
 
 [tool.pdm.build]
 includes = [
-    "src/wexample_helpers_git/py.typed",
+    'src/wexample_helpers_git/*',
 ]
 package-dir = "src"
 

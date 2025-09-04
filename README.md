@@ -2,7 +2,7 @@
 
 Some python basic helpers for git.
 
-Version: 0.0.49
+Version: 0.0.50
 
 ## Requirements
 
@@ -12,7 +12,7 @@ Version: 0.0.49
 
 - gitpython
 - pydantic>=2,<3
-- wexample-helpers==0.0.66
+- wexample-helpers==0.0.67
 
 ## Installation
 

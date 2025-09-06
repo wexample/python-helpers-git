@@ -1,11 +1,11 @@
 from __future__ import annotations
 
-from collections.abc import Generator
-from pathlib import Path
-
 import pytest
-from git import Repo
-from wexample_helpers_git.helpers.git import git_is_init, git_remote_create_once
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from collections.abc import Generator
+    from pathlib import Path
+    from git import Repo
 
 
 @pytest.fixture
@@ -17,11 +17,13 @@ def temp_dir(tmp_path: Path) -> Generator[Path]:
 @pytest.fixture
 def git_repo(temp_dir: Path) -> Generator[Repo]:
     """Fixture providing an initialized git repository."""
+    from git import Repo
     repo = Repo.init(temp_dir)
     yield repo
 
 
 def test_git_is_init(temp_dir: Path, git_repo: Repo) -> None:
+    from wexample_helpers_git.helpers.git import git_is_init
     # Test with initialized repository
     assert git_is_init(temp_dir) is True
 
@@ -36,6 +38,7 @@ def test_git_is_init(temp_dir: Path, git_repo: Repo) -> None:
 
 
 def test_git_remote_create_once(git_repo: Repo) -> None:
+    from wexample_helpers_git.helpers.git import git_remote_create_once
     remote_name = "origin"
     remote_url = "https://github.com/test/repo.git"
 

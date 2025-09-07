@@ -42,9 +42,6 @@ dev = [
 distribution = true
 
 [tool.pdm.build]
-includes = [
-    'src/wexample_helpers_git/*',
-]
 package-dir = "src"
 
 [[tool.pdm.build.packages]]

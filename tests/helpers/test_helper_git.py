@@ -12,18 +12,18 @@ if TYPE_CHECKING:
 
 
 @pytest.fixture
-def temp_dir(tmp_path: Path) -> Generator[Path]:
-    """Fixture providing a temporary directory."""
-    yield tmp_path
-
-
-@pytest.fixture
 def git_repo(temp_dir: Path) -> Generator[Repo]:
     """Fixture providing an initialized git repository."""
     from git import Repo
 
     repo = Repo.init(temp_dir)
     yield repo
+
+
+@pytest.fixture
+def temp_dir(tmp_path: Path) -> Generator[Path]:
+    """Fixture providing a temporary directory."""
+    yield tmp_path
 
 
 def test_git_is_init(temp_dir: Path, git_repo: Repo) -> None:

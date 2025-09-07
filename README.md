@@ -10,6 +10,8 @@ Version: 0.0.50
 
 ## Dependencies
 
+- attrs>=23.1.0
+- cattrs>=23.1.0
 - gitpython
 - pydantic>=2,<3
 - wexample-helpers==0.0.67

@@ -1,6 +1,6 @@
 # wexample-helpers-git
 
-Version: 0.0.55
+Version: 0.0.56
 
 Some python basic helpers for git.
 

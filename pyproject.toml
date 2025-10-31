@@ -4,7 +4,7 @@ build-backend = "pdm.backend"
 
 [project]
 name = "wexample-helpers-git"
-version = "0.0.54"
+version = "0.0.55"
 description = "Some python basic helpers for git."
 authors = [{name = "weeger", email = "contact@wexample.com"}]
 requires-python = ">=3.10"

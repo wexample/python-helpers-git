@@ -116,7 +116,7 @@ def git_get_upstream(*, cwd: FileStringOrPath, inherit_stdio: bool = False) -> s
 
 
 def git_has_changes_since_tag(
-    tag: str, pathspec: str = ".", *, cwd: FileStringOrPath, inherit_stdio: bool = False
+    tag: str, pathspec: str = ".", *, cwd: FileStringOrPath
 ) -> bool:
     """Return True if there are changes in pathspec since the given tag.
 

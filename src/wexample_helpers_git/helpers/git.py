@@ -7,8 +7,26 @@ if TYPE_CHECKING:
     from wexample_helpers.const.types import FileStringOrPath
 
 
+def git_get_current_commit_hash(*, cwd: FileStringOrPath, short: bool = False) -> str:
+    """Return the current commit hash (full or short)."""
+    from wexample_helpers.helpers.file import file_resolve_path
+    from wexample_helpers.helpers.shell import shell_run
+
+    cmd = ["git", "rev-parse"]
+    if short:
+        cmd.append("--short")
+    cmd.append("HEAD")
+
+    return shell_run(cmd, inherit_stdio=False, cwd=file_resolve_path(cwd)).stdout.strip()
+
+
+def git_has_uncommitted_changes(*, cwd: FileStringOrPath) -> bool:
+    """Return True if there are any uncommitted changes (staged or unstaged)."""
+    return git_has_index_changes(cwd=cwd) or git_has_working_changes(cwd=cwd)
+
+
 def git_checkout_new_branch(
-    branch: str, *, cwd: FileStringOrPath, inherit_stdio: bool = True
+        branch: str, *, cwd: FileStringOrPath, inherit_stdio: bool = True
 ) -> None:
     """Create and switch to a new branch using `git checkout -b <branch>` (compat)."""
     from wexample_helpers.helpers.file import file_resolve_path
@@ -22,7 +40,7 @@ def git_checkout_new_branch(
 
 
 def git_commit_all_with_message(
-    message: str, *, cwd: FileStringOrPath, inherit_stdio: bool = True
+        message: str, *, cwd: FileStringOrPath, inherit_stdio: bool = True
 ) -> None:
     """Commit all tracked changes with the provided message if any are present (callers should check)."""
     from wexample_helpers.helpers.file import file_resolve_path
@@ -36,7 +54,7 @@ def git_commit_all_with_message(
 
 
 def git_create_or_switch_branch(
-    branch: str, *, cwd: FileStringOrPath, inherit_stdio: bool = True
+        branch: str, *, cwd: FileStringOrPath, inherit_stdio: bool = True
 ) -> None:
     """Try to create and switch to a branch; fallback to legacy checkout; finally switch existing.
 
@@ -67,7 +85,7 @@ def git_current_branch(*, cwd: FileStringOrPath, inherit_stdio: bool = False) ->
 
 
 def git_ensure_upstream(
-    *, cwd: FileStringOrPath, default_remote: str = "origin", inherit_stdio: bool = True
+        *, cwd: FileStringOrPath, default_remote: str = "origin", inherit_stdio: bool = True
 ) -> str:
     """Ensure current branch has an upstream. If missing, set to <default_remote>/<branch> and return it.
 
@@ -116,7 +134,7 @@ def git_get_upstream(*, cwd: FileStringOrPath, inherit_stdio: bool = False) -> s
 
 
 def git_has_changes_since_tag(
-    tag: str, pathspec: str = ".", *, cwd: FileStringOrPath
+        tag: str, pathspec: str = ".", *, cwd: FileStringOrPath
 ) -> bool:
     """Return True if there are changes in pathspec since the given tag.
 
@@ -137,7 +155,7 @@ def git_has_changes_since_tag(
     return out == "CHANGED"
 
 
-def git_has_index_changes(*, cwd: FileStringOrPath, inherit_stdio: bool = True) -> bool:
+def git_has_index_changes(*, cwd: FileStringOrPath) -> bool:
     """Return True if there are staged (indexed) changes."""
     from wexample_helpers.helpers.file import file_resolve_path
     from wexample_helpers.helpers.shell import shell_run
@@ -152,7 +170,7 @@ def git_has_index_changes(*, cwd: FileStringOrPath, inherit_stdio: bool = True) 
 
 
 def git_has_working_changes(
-    *, cwd: FileStringOrPath, inherit_stdio: bool = True
+        *, cwd: FileStringOrPath
 ) -> bool:
     """Return True if there are unstaged changes in tracked files."""
     from wexample_helpers.helpers.file import file_resolve_path
@@ -185,7 +203,7 @@ def git_is_init(path: FileStringOrPath) -> bool:
 
 
 def git_last_tag_for_prefix(
-    prefix: str, *, cwd: FileStringOrPath, inherit_stdio: bool = False
+        prefix: str, *, cwd: FileStringOrPath, inherit_stdio: bool = False
 ) -> str | None:
     """Return the last tag (sorted -V) matching the given glob prefix, e.g. "name/v*".
 
@@ -207,7 +225,7 @@ def git_last_tag_for_prefix(
 
 
 def git_pull_rebase_autostash(
-    *, cwd: FileStringOrPath, inherit_stdio: bool = True
+        *, cwd: FileStringOrPath, inherit_stdio: bool = True
 ) -> None:
     """Pull latest changes with rebase and autostash to preserve local modifications."""
     from wexample_helpers.helpers.file import file_resolve_path
@@ -233,11 +251,11 @@ def git_push_follow_tags(*, cwd: FileStringOrPath, inherit_stdio: bool = True) -
 
 
 def git_push_tag(
-    tag: str,
-    *,
-    cwd: FileStringOrPath,
-    remote: str = "origin",
-    inherit_stdio: bool = True,
+        tag: str,
+        *,
+        cwd: FileStringOrPath,
+        remote: str = "origin",
+        inherit_stdio: bool = True,
 ) -> None:
     """Push a specific tag to the remote."""
     from wexample_helpers.helpers.file import file_resolve_path
@@ -259,11 +277,11 @@ def git_remote_create_once(repo: Repo, name: str, url: str) -> Remote | None:
 
 
 def git_set_upstream(
-    branch: str,
-    *,
-    cwd: FileStringOrPath,
-    remote: str = "origin",
-    inherit_stdio: bool = True,
+        branch: str,
+        *,
+        cwd: FileStringOrPath,
+        remote: str = "origin",
+        inherit_stdio: bool = True,
 ) -> None:
     """Set the upstream of the current branch to remote/branch."""
     from wexample_helpers.helpers.file import file_resolve_path
@@ -277,7 +295,7 @@ def git_set_upstream(
 
 
 def git_switch_branch(
-    branch: str, *, cwd: FileStringOrPath, inherit_stdio: bool = True
+        branch: str, *, cwd: FileStringOrPath, inherit_stdio: bool = True
 ) -> None:
     """Switch to an existing branch using `git switch <branch>`."""
     from wexample_helpers.helpers.file import file_resolve_path
@@ -292,7 +310,7 @@ def git_switch_branch(
 
 # Branch switching/creation helpers
 def git_switch_new_branch(
-    branch: str, *, cwd: FileStringOrPath, inherit_stdio: bool = True
+        branch: str, *, cwd: FileStringOrPath, inherit_stdio: bool = True
 ) -> None:
     """Create and switch to a new branch using `git switch -c <branch>`."""
     from wexample_helpers.helpers.file import file_resolve_path
@@ -306,7 +324,7 @@ def git_switch_new_branch(
 
 
 def git_tag_annotated(
-    tag: str, message: str, *, cwd: FileStringOrPath, inherit_stdio: bool = True
+        tag: str, message: str, *, cwd: FileStringOrPath, inherit_stdio: bool = True
 ) -> None:
     """Create an annotated tag. Raises if the tag already exists."""
     from wexample_helpers.helpers.file import file_resolve_path
@@ -320,7 +338,7 @@ def git_tag_annotated(
 
 
 def git_tag_exists(
-    tag: str, *, cwd: FileStringOrPath, inherit_stdio: bool = False
+        tag: str, *, cwd: FileStringOrPath, inherit_stdio: bool = False
 ) -> bool:
     """Return True if a tag with the given name exists locally."""
     from wexample_helpers.helpers.file import file_resolve_path

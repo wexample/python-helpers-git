@@ -7,26 +7,6 @@ if TYPE_CHECKING:
     from wexample_helpers.const.types import FileStringOrPath
 
 
-def git_get_current_commit_hash(*, cwd: FileStringOrPath, short: bool = False) -> str:
-    """Return the current commit hash (full or short)."""
-    from wexample_helpers.helpers.file import file_resolve_path
-    from wexample_helpers.helpers.shell import shell_run
-
-    cmd = ["git", "rev-parse"]
-    if short:
-        cmd.append("--short")
-    cmd.append("HEAD")
-
-    return shell_run(
-        cmd, inherit_stdio=False, cwd=file_resolve_path(cwd)
-    ).stdout.strip()
-
-
-def git_has_uncommitted_changes(*, cwd: FileStringOrPath) -> bool:
-    """Return True if there are any uncommitted changes (staged or unstaged)."""
-    return git_has_index_changes(cwd=cwd) or git_has_working_changes(cwd=cwd)
-
-
 def git_checkout_new_branch(
     branch: str, *, cwd: FileStringOrPath, inherit_stdio: bool = True
 ) -> None:
@@ -120,6 +100,21 @@ def git_ensure_upstream(
     return upstream
 
 
+def git_get_current_commit_hash(*, cwd: FileStringOrPath, short: bool = False) -> str:
+    """Return the current commit hash (full or short)."""
+    from wexample_helpers.helpers.file import file_resolve_path
+    from wexample_helpers.helpers.shell import shell_run
+
+    cmd = ["git", "rev-parse"]
+    if short:
+        cmd.append("--short")
+    cmd.append("HEAD")
+
+    return shell_run(
+        cmd, inherit_stdio=False, cwd=file_resolve_path(cwd)
+    ).stdout.strip()
+
+
 def git_get_upstream(*, cwd: FileStringOrPath, inherit_stdio: bool = False) -> str:
     """Return the symbolic upstream (e.g., origin/main) or empty string if none is set."""
     from wexample_helpers.helpers.file import file_resolve_path
@@ -169,6 +164,11 @@ def git_has_index_changes(*, cwd: FileStringOrPath) -> bool:
         cwd=file_resolve_path(cwd),
     ).stdout.strip()
     return out == "CHANGED"
+
+
+def git_has_uncommitted_changes(*, cwd: FileStringOrPath) -> bool:
+    """Return True if there are any uncommitted changes (staged or unstaged)."""
+    return git_has_index_changes(cwd=cwd) or git_has_working_changes(cwd=cwd)
 
 
 def git_has_working_changes(*, cwd: FileStringOrPath) -> bool:

@@ -1,4 +1,7 @@
 from __future__ import annotations
 
-GIT_PROVIDER_GITLAB = "gitlab"
+# filestate: python-constant-sort
 GIT_PROVIDER_GITHUB = "github"
+GIT_PROVIDER_GITLAB = "gitlab"
+
+GIT_BRANCH_MAIN: str = "main"

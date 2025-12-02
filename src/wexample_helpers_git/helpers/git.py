@@ -2,6 +2,9 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+from wexample_helpers.classes.shell_result import ShellResult
+from wexample_helpers.helpers.shell import shell_run
+
 if TYPE_CHECKING:
     from git import Remote, Repo
     from wexample_helpers.const.types import FileStringOrPath
@@ -67,7 +70,10 @@ def git_current_branch(*, cwd: FileStringOrPath, inherit_stdio: bool = False) ->
 
 
 def git_ensure_upstream(
-    *, cwd: FileStringOrPath, default_remote: str = "origin", inherit_stdio: bool = True
+    *,
+    cwd: FileStringOrPath,
+    default_remote: None | str = None,
+    inherit_stdio: bool = True,
 ) -> str:
     """Ensure current branch has an upstream. If missing, set to <default_remote>/<branch> and return it.
 
@@ -79,6 +85,8 @@ def git_ensure_upstream(
     cwd_resolved = file_resolve_path(cwd)
     branch = git_current_branch(cwd=cwd_resolved, inherit_stdio=False)
     upstream = git_get_upstream(cwd=cwd_resolved, inherit_stdio=False)
+    default_remote = default_remote or "origin"
+
     if not upstream:
         try:
             # Try to set upstream to an existing remote branch.
@@ -238,16 +246,96 @@ def git_pull_rebase_autostash(
     )
 
 
-def git_push_follow_tags(*, cwd: FileStringOrPath, inherit_stdio: bool = True) -> None:
-    """Push the current branch to its upstream and follow tags."""
-    from wexample_helpers.helpers.file import file_resolve_path
-    from wexample_helpers.helpers.shell import shell_run
-
-    shell_run(
-        ["git", "push", "--follow-tags"],
+def git_run(
+    cmd: list[str],
+    *,
+    cwd,
+    inherit_stdio: bool = True,
+) -> ShellResult:
+    return shell_run(
+        cmd=["git"] + cmd,
         inherit_stdio=inherit_stdio,
-        cwd=file_resolve_path(cwd),
+        cwd=cwd,
+        capture=not inherit_stdio,
     )
+
+
+def git_push_follow_tags(
+    *,
+    cwd,
+    inherit_stdio: bool = True,
+    branch_name: str | None = None,
+    remote: str = "origin",
+) -> None:
+    """
+    Push the specified branch (or the current branch) to the given remote,
+    supporting local:remote syntax, auto-tracking, and follow-tags.
+
+    - If upstream is missing, uses `git push -u` which will create the remote branch if needed.
+    """
+    from wexample_helpers.helpers.file import file_resolve_path
+
+    cwd = file_resolve_path(cwd)
+
+    # Determine local branch to push
+    if branch_name is None:
+        branch_name = git_run(
+            ["rev-parse", "--abbrev-ref", "HEAD"],
+            cwd=cwd,
+            inherit_stdio=False,
+        )
+        if branch_name == "HEAD":
+            raise RuntimeError("Cannot push: detached HEAD state.")
+
+    # Parse local:remote pattern
+    if ":" in branch_name:
+        local_branch, remote_branch = branch_name.split(":", 1)
+    else:
+        local_branch = branch_name
+        remote_branch = branch_name
+
+    # Ensure local branch exists
+    local_branches_output = git_run(
+        ["branch", "--format", "%(refname:short)"],
+        cwd=cwd,
+        inherit_stdio=False,
+    )
+    local_branches = [b for b in local_branches_output.split("\n") if b.strip()]
+    if local_branch not in local_branches:
+        raise ValueError(f"Local branch '{local_branch}' does not exist.")
+
+    # Ensure remote exists
+    remotes_output = git_run(
+        ["remote"],
+        cwd=cwd,
+        inherit_stdio=False,
+    )
+    remotes = [r for r in remotes_output.split("\n") if r.strip()]
+    if remote not in remotes:
+        raise ValueError(f"Remote '{remote}' does not exist.")
+
+    # Check if upstream is configured for the local branch
+    upstream = git_run(
+        ["for-each-ref", f"refs/heads/{local_branch}", "--format=%(upstream:short)"],
+        cwd=cwd,
+        inherit_stdio=False,
+    ).strip()
+
+    push_refspec = f"{local_branch}:{remote_branch}"
+
+    # If no upstream, push with -u to both create remote branch and set tracking
+    if not upstream:
+        git_run(
+            ["push", "--set-upstream", remote, push_refspec, "--follow-tags"],
+            cwd=cwd,
+            inherit_stdio=inherit_stdio,
+        )
+    else:
+        git_run(
+            ["push", remote, push_refspec, "--follow-tags"],
+            cwd=cwd,
+            inherit_stdio=inherit_stdio,
+        )
 
 
 def git_push_tag(

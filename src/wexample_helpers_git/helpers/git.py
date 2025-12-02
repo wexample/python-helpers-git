@@ -238,13 +238,18 @@ def git_pull_rebase_autostash(
     )
 
 
-def git_push_follow_tags(*, cwd: FileStringOrPath, inherit_stdio: bool = True) -> None:
-    """Push the current branch to its upstream and follow tags."""
+def git_push_follow_tags(
+        *,
+        cwd: FileStringOrPath,
+        inherit_stdio: bool = True,
+        remote: str = "origin"
+) -> None:
+    """Push the current branch to the given remote and follow tags."""
     from wexample_helpers.helpers.file import file_resolve_path
     from wexample_helpers.helpers.shell import shell_run
 
     shell_run(
-        ["git", "push", "--follow-tags"],
+        ["git", "push", remote, "--follow-tags"],
         inherit_stdio=inherit_stdio,
         cwd=file_resolve_path(cwd),
     )

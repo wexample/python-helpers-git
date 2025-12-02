@@ -67,7 +67,7 @@ def git_current_branch(*, cwd: FileStringOrPath, inherit_stdio: bool = False) ->
 
 
 def git_ensure_upstream(
-    *, cwd: FileStringOrPath, default_remote: str = "origin", inherit_stdio: bool = True
+    *, cwd: FileStringOrPath, default_remote:None| str = None, inherit_stdio: bool = True
 ) -> str:
     """Ensure current branch has an upstream. If missing, set to <default_remote>/<branch> and return it.
 
@@ -79,6 +79,8 @@ def git_ensure_upstream(
     cwd_resolved = file_resolve_path(cwd)
     branch = git_current_branch(cwd=cwd_resolved, inherit_stdio=False)
     upstream = git_get_upstream(cwd=cwd_resolved, inherit_stdio=False)
+    default_remote = default_remote or "origin"
+
     if not upstream:
         try:
             # Try to set upstream to an existing remote branch.

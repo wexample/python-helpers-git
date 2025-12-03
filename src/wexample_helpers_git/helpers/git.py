@@ -246,14 +246,6 @@ def git_pull_rebase_autostash(
     )
 
 
-def git_run(
-    cmd: list[str],
-    *args,
-    **kwargs,
-) -> ShellResult:
-    return shell_run(cmd=["git"] + cmd, *args, **kwargs)
-
-
 def git_push_follow_tags(
     *,
     cwd,
@@ -356,6 +348,14 @@ def git_remote_create_once(repo: Repo, name: str, url: str) -> Remote | None:
         return None
     except ValueError:
         return repo.create_remote(name, url)
+
+
+def git_run(
+    cmd: list[str],
+    *args,
+    **kwargs,
+) -> ShellResult:
+    return shell_run(cmd=["git"] + cmd, *args, **kwargs)
 
 
 def git_set_upstream(

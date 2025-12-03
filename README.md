@@ -1,6 +1,6 @@
 # wexample-helpers-git
 
-Version: 0.0.94
+Version: 0.0.95
 
 Some python basic helpers for git.
 
@@ -190,7 +190,7 @@ Free to use in both personal and commercial projects.
 
 ## Integration in the Suite
 
-This package is part of the **Wexample Suite** — a collection of high-quality Python packages designed to work seamlessly together.
+This package is part of the Wexample Suite — a collection of high-quality, modular tools designed to work seamlessly together across multiple languages and environments.
 
 ### Related Packages
 
@@ -209,7 +209,7 @@ Refer to each package's documentation for specific version compatibility require
 - attrs: >=23.1.0
 - cattrs: >=23.1.0
 - gitpython: 
-- wexample-helpers: ==0.0.86
+- wexample-helpers: ==0.0.87
 
 
 # About us

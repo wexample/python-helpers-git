@@ -248,15 +248,13 @@ def git_pull_rebase_autostash(
 
 def git_run(
     cmd: list[str],
-    *,
-    cwd,
-    inherit_stdio: bool = True,
+    *args,
+    **kwargs,
 ) -> ShellResult:
     return shell_run(
         cmd=["git"] + cmd,
-        inherit_stdio=inherit_stdio,
-        cwd=cwd,
-        capture=not inherit_stdio,
+        *args,
+        **kwargs
     )
 
 

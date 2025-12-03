@@ -251,11 +251,7 @@ def git_run(
     *args,
     **kwargs,
 ) -> ShellResult:
-    return shell_run(
-        cmd=["git"] + cmd,
-        *args,
-        **kwargs
-    )
+    return shell_run(cmd=["git"] + cmd, *args, **kwargs)
 
 
 def git_push_follow_tags(

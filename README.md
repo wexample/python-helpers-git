@@ -1,6 +1,6 @@
 # wexample-helpers-git
 
-Version: 0.0.95
+Version: 0.0.96
 
 Some python basic helpers for git.
 
@@ -209,7 +209,7 @@ Refer to each package's documentation for specific version compatibility require
 - attrs: >=23.1.0
 - cattrs: >=23.1.0
 - gitpython: 
-- wexample-helpers: ==0.0.87
+- wexample-helpers: ==0.0.88
 
 
 # About us
